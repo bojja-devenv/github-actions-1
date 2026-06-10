@@ -1,6 +1,6 @@
 name: learn-github-actions
 run-name: ${{ github.actor }} is learning GitHub Actions
-echo "The repository owner is: ${{ github.repository_owner }}"
+
 on: [push]
 jobs:
   check-bats-version:
@@ -12,3 +12,4 @@ jobs:
           node-version: '20'
       - run: npm install -g bats
       - run: bats -v
+      echo "The repository owner is: ${{ github.repository_owner }}"
