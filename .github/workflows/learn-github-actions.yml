@@ -10,4 +10,6 @@ jobs:
         with:
           node-version: '20'
       - run: npm install -g bats
-      - run: echo "The repository owner is: ${{ github.repository_owner }}" bats -v
+      - run: |
+          echo "The repository owner is: ${{ github.repository_owner }}" 
+          bats -v
