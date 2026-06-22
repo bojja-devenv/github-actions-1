@@ -2,7 +2,7 @@ name: Authenticate to Google Cloud from GitHub Actions Using OIDC
 
 on:
   push:
-  branches: [main]
+    branches: [main]
 
   workflow_dispatch:
 
