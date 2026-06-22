@@ -1,14 +1,43 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
-jobs:
-  job_id:
-    permissions:
-      contents: 'read'
-      id-token: 'write'
+name: Authenticate to Google Cloud from GitHub Actions Using OIDC
 
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v3'
-      with:
-        project_id: 'dialogflowcx-handson'
-        workload_identity_provider: 'projects/692897809117/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+on:
+  # push:
+  #     branches: [main]
+
+  workflow_dispatch:
+
+# Required for OIDC token generation
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    # runs-on: debian-self-hosted-runner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Authenticate to GCP using Workload Identity Federation
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          token_format: "access_token"
+          workload_identity_provider: 'projects/692897809117/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Verify Authentication
+        run: |
+          echo "Authenticated account:"
+          gcloud auth list
+
+          echo "Current project:"
+          gcloud config get-value project
+
+          gcloud projects list
